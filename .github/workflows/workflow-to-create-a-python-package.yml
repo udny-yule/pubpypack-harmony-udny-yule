@@ -1,0 +1,165 @@
+name: Release the package
+
+on:
+  - push
+
+jobs:
+  check-formatting-with-black:
+    name: Check formatting with black
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4.0.0
+        with:
+          python-version: "3.10"
+
+      - name: Install tox
+        run: python -m pip install tox
+
+      - name: Run the format checker and enforcer, black
+        run: tox -e format
+
+
+  lint-with-flake8:
+    name: Lint the code using flake8
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4.0.0
+        with:
+          python-version: "3.10"
+
+      - name: Install tox
+        run: python -m pip install tox
+
+      - name: Run the linting tool flake8
+        run: tox -e lint
+
+
+  check-type-hinting-with-mypy:
+    name: Check type hinting with mypy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4.0.0
+        with:
+          python-version: "3.10"
+
+      - name: Install tox
+        run: python -m pip install tox
+
+      - name: Run a typecheck using mypy
+        run: tox -e typecheck
+
+
+  test-on-multiple-python-versions:
+    name: Test on multiple Python versions
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python:
+          - version: "3.10"
+            toxenv: "py310"
+          - version: "3.9"
+            toxenv: "py39"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4.0.0
+        with:
+          python-version: ${{ matrix.python.version }}
+
+      - name: Install tox
+        run: python -m pip install tox
+
+      - name: Use tox to run pytest for each Python version tox test environment
+        run: tox -e ${{ matrix.python.toxenv }}
+
+
+  build-wheels-using-cibuildwheel:
+    name: Build wheels using cibuildwheel on ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-20.04, windows-2019, macOS-10.15 ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4.0.0
+        with:
+          python-version: "3.10"
+
+      - name: Install cibuildwheel
+        run: python -m pip install cibuildwheel==2.3.1
+
+      - name: Build wheels
+        run: python -m cibuildwheel --output-dir wheels
+
+      - name: Upload wheels
+        uses: actions/upload-artifact@v3
+        with:
+          name: Glob to refer to .whl files
+          path: wheels/*.whl
+
+
+  build-source-distribution:
+    name: Build source distribution using the tool `build`
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4.0.0
+        with:
+          python-version: "3.10"
+
+      - name: Install the tool `build`
+        run: python -m pip install build
+
+      - name: Build source distribution
+        run: python -m build --sdist --outdir dist
+
+      - name: Upload source distribution files
+        uses: actions/upload-artifact@v3
+        with:
+          name: Glob to refer to files containing source distribution
+          path: dist/*.tar.gz
+
+
+  publish:
+    name: Publish package
+    if: startsWith(github.event.ref, 'refs/tags/v')
+    needs:
+      - check-formatting-with-black
+      - lint-with-flake8
+      - check-type-hinting-with-mypy
+      - test-on-multiple-python-versions
+      - build-source-distribution
+      - build-wheels-using-cibuildwheel
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: artifact
+          path: ./dist/
+
+      - uses: pypa/gh-action-pypi-publish@1.5.0
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}

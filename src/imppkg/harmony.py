@@ -16,12 +16,12 @@ def main() -> None:
     print(harmonic_mean_colored)
 
 
-def _parse_nums(arg_list_command_line: List[str]) -> List[float]:
-    nums: List[float] = [float(arg) for arg in arg_list_command_line]
+def _parse_nums(arg_list_command_line: list[str]) -> list[float]:
+    nums: list[float] = [float(arg) for arg in arg_list_command_line]
     return nums
 
 
-def _calculate_results(nums: List[float]) -> float:
+def _calculate_results(nums: list[float]) -> float:
     harmonic_mean_: float = harmonic_mean(nums)
     return harmonic_mean_
 

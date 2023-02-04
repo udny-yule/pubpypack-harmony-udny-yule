@@ -29,7 +29,7 @@ def test_harmony_happy_path(monkeypatch: MonkeyPatch, capsys: CaptureFixture[str
     ],
 )
 def test_harmony_parametrized(
-    inputs: List[Union[int, float]], expected_result_value: float, monkeypatch: MonkeyPatch, capsys: CaptureFixture[str]
+    inputs: list[Union[int, float]], expected_result_value: float, monkeypatch: MonkeyPatch, capsys: CaptureFixture[str]
 ):
     monkeypatch.setattr(sys, "argv", ["harmony"] + inputs)
     if isinstance(expected_result_value, type) and issubclass(expected_result_value, Exception):

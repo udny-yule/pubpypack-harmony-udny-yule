@@ -10,7 +10,7 @@ description = "This package demonstrates the use of pyproject.toml."
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.8"
-dependencies = ["termcolor>=1.1.0,<2",]
+dependencies = ["termcolor>=1.1.0,<3",]
 
 [project.urls]
 homepage = "https://github.com/udny-yule/first-python-package"

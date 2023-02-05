@@ -5,16 +5,12 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pubpypack-harmony-udny-yule"
 version = "0.0.3"
-authors = [
-    { name = "Udny Yule", email = "udny.yule+1@gmail.com" }
-]
+authors = [{ name = "Udny Yule", email = "udny.yule+1@gmail.com" }]
 description = "This package demonstrates the use of pyproject.toml."
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.8"
-dependencies = [
-    "termcolor>=1.1.0,<2",
-]
+dependencies = ["termcolor>=1.1.0,<2",]
 
 [project.urls]
 homepage = "https://github.com/udny-yule/first-python-package"
@@ -38,9 +34,7 @@ imppkg = ["*.json", "*.pyx"]
 minversion = "7.0"
 addopts = "--cov --strict-markers"
 xfail_strict = true
-testpaths = [
-    "test",
-]
+testpaths = ["test",]
 
 # https://coverage.readthedocs.io/en/latest/config.html
 [tool.coverage.run]
@@ -132,9 +126,7 @@ legacy_tox_ini = """
         src/imppkg/ \
         src/imppkg/*.c \
         src/imppkg/*.so
-        sphinx-autobuild -n -W --port 9876 -b html docs/ docs/_build/
-
-"""
+        sphinx-autobuild -n -W --port 9876 -b html docs/ docs/_build/"""
 
 # https://mypy.readthedocs.io/en/stable/config_file.html
 [tool.mypy]

@@ -5,7 +5,7 @@ from _pytest.capture import CaptureFixture
 from _pytest.monkeypatch import MonkeyPatch
 from imppkg.harmony import main
 from termcolor import colored
-from typing import List, Union
+from typing import Union
 
 
 def test_harmony_happy_path(monkeypatch: MonkeyPatch, capsys: CaptureFixture[str]):

@@ -5,7 +5,6 @@ A command-line interface for calculating the harmonic mean of user-provided numb
 import sys
 from imppkg.harmonic_mean import harmonic_mean
 from termcolor import colored
-from typing import List
 
 
 def main() -> None:

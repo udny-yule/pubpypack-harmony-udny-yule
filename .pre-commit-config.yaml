@@ -4,3 +4,18 @@ repos:
     hooks:
       - id: pyupgrade
         args: ['--py39-plus']
+
+  - repo: https://github.com/psf/black
+    rev: 23.1.0
+    hooks:
+      - id: black
+        language_version: python3.10
+        args: [--config=pyproject.toml]
+
+# Note: flake8 appears to ignore --config args; see
+# https://github.com/pre-commit/pre-commit-hooks/issues/112
+  - repo: https://github.com/pycqa/flake8
+    rev: 6.0.0
+    hooks:
+      - id: flake8
+        args: [--config=pyproject.toml, --max-line-length=120]
